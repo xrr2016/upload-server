@@ -6,11 +6,15 @@ export default (appInfo: EggAppInfo) => {
 
   config.keys = appInfo.name + '_1574657083570_8776'
 
-  config.middleware = []
+  config.middleware = [
+    'logger',
+  ]
 
   config.security = {
     csrf: false,
   }
+
+  config.logger = {}
 
   config.cors = {
     origin: '*',

@@ -28,11 +28,14 @@ export default class Oss extends Service {
   private async uploadFile(folder, file) {
     let result
 
+    const filename = file.filename.replace(/\.(\w+)$/, `-${Date.now()}.$1`)
+
     try {
-      result = await this.client.put(`${folder}/${file.filename}`, file.filepath, {
+      result = await this.client.put(`${folder}/${filename}`, file.filepath, {
         headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
       }).then(result => result)
     } catch (e) {
+      this.ctx.logger.error(new Error(e.messag))
       throw new Error(e.message)
     } finally {
       this.deleteFile(file.filepath)

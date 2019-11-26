@@ -27,7 +27,8 @@
     "egg-cors": "^2.2.3",
     "egg-oss": "^2.0.0",
     "egg-scripts": "^2.6.0",
-    "egg-validate": "^2.0.2"
+    "egg-validate": "^2.0.2",
+    "koa-logger": "^3.2.1"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.40",
