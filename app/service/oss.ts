@@ -32,7 +32,7 @@ export default class Oss extends Service {
 
     try {
       result = await this.client.put(`${folder}/${filename}`, file.filepath, {
-        headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
+        headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': filename },
       }).then(result => result)
     } catch (e) {
       this.ctx.logger.error(new Error(e.messag))
@@ -61,7 +61,7 @@ export default class Oss extends Service {
           // @ts-ignore
           url: res.url,
           // @ts-ignore
-          name: file.filename,
+          name: res.name.replace(`${parmas.folder}/`, ''),
         })
       }
 
@@ -72,7 +72,7 @@ export default class Oss extends Service {
       result = {
         url: res.url,
         success: true,
-        name: file.filename,
+        name: res.name.replace(`${parmas.folder}/`, ''),
       }
     }
 
