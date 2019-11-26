@@ -32,7 +32,7 @@ export default class Oss extends Service {
 
     try {
       result = await this.client.put(`${folder}/${filename}`, file.filepath, {
-        headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': filename },
+        headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
       }).then(result => result)
     } catch (e) {
       this.ctx.logger.error(new Error(e.messag))
