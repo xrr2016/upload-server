@@ -1,5 +1,8 @@
+import * as dotenv from 'dotenv'
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg'
 import { Provider } from '../app/params'
+
+dotenv.config()
 
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>
@@ -22,8 +25,8 @@ export default (appInfo: EggAppInfo) => {
   }
 
   config.alinode = {
-    appid: '82670',
-    secret: 'b1b9864ca50d0ced93c43785029a9b1f1dec228c',
+    appid: process.env.ALINODE_APPID,
+    secret: process.env.ALINODE_SECRET,
   }
 
   config.multipart = {
@@ -31,10 +34,10 @@ export default (appInfo: EggAppInfo) => {
   }
 
   config[Provider.ALIBABA] = {
-    bucket: 'deepexi-moby',
-    region: 'oss-cn-shenzhen',
-    accessKeyId: 'LTAI4755mDlzKWCK',
-    accessKeySecret: 'VASAQnQttTkSBUNJr2YEkqW3JXnkyi',
+    bucket: process.env.OSS_BUCKET,
+    region: process.env.OSS_REGION,
+    accessKeyId: process.env.OSS_ACCESSKEYID,
+    accessKeySecret: process.env.OSS_ACCESSKEYSECRET,
   }
 
   config.onerror = {
