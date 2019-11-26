@@ -2,8 +2,8 @@
 
 set -e
 
+IMAGE_NAME="upload-server"
 CONTAINER_NAME="upload-server"
-CONTAINER_IMAGE="upload-server"
 
 #echo '拉取代码'
 
@@ -15,9 +15,10 @@ echo '运行容器'
 
 docker rm -f ${CONTAINER_NAME} || true
 
-docker build -t ${CONTAINER_NAME} .
+docker build -t ${IMAGE_NAME} .
 
-docker run -d -p 7001:7001 --rm --name=${CONTAINER_NAME} ${CONTAINER_IMAGE}
+#docker run -d -p 7001:7001 --name=${CONTAINER_NAME} ${IMAGE_NAME}
+docker run -d -p 7001:7001 --rm --name=upload-server upload-server
 
 exit
 EOF
