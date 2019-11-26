@@ -5,6 +5,10 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-validate',
   },
+  alinode: {
+    enable: true,
+    package: 'egg-alinode',
+  },
 }
 
 export default plugin

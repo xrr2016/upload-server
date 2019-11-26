@@ -1,0 +1,14 @@
+.git
+
+logs
+*.log
+
+pids
+*.pid
+*.seed
+
+lib-cov
+
+coverage
+
+node_modules

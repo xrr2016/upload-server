@@ -12,6 +12,11 @@ export default (appInfo: EggAppInfo) => {
     csrf: false,
   }
 
+  config.alinode = {
+    appid: '82670',
+    secret: 'b1b9864ca50d0ced93c43785029a9b1f1dec228c',
+  }
+
   config.multipart = {
     mode: 'file',
   }

@@ -9,9 +9,9 @@ post /upload
 ## Dev
 
 ```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
+npm i
+npm run dev
+open http://localhost:7001/
 ```
 
 Don't tsc compile at development mode, if you had run `tsc` then you need to `npm run clean` before `npm run dev`.
@@ -19,8 +19,12 @@ Don't tsc compile at development mode, if you had run `tsc` then you need to `np
 ### Deploy
 
 ```bash
-$ npm run tsc
-$ npm start
+docker build -t upload-server .
+
+docker stop upload-server
+docker rm upload-server
+
+docker run -d -p 7001:7001 --rm --name=upload-server upload-server
 ```
 
 ### Npm Scripts
