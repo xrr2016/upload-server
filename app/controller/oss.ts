@@ -7,8 +7,8 @@ export default class OssController extends Controller {
 
     const rules = {
       folder: { type: 'string', required: false, default: '/', trim: true },
-      provider: { type: 'string', required: false, default: Provider.ALIOSS },
-      bucket: { type: 'string', required: false, default: config[Provider.ALIOSS].bucket },
+      provider: { type: 'string', required: false, default: Provider.ALIBABA },
+      bucket: { type: 'string', required: false, default: config[Provider.ALIBABA].bucket },
     }
 
     await ctx.validate(rules, ctx.request.body)

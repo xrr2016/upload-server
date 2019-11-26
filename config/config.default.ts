@@ -4,11 +4,8 @@ import { Provider } from '../app/params'
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>
 
-  // override config from framework / plugin
-  // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1574657083570_8776'
 
-  // add your egg config in here
   config.middleware = []
 
   config.security = {
@@ -19,7 +16,7 @@ export default (appInfo: EggAppInfo) => {
     mode: 'file',
   }
 
-  config[Provider.ALIOSS] = {
+  config[Provider.ALIBABA] = {
     bucket: 'deepexi-moby',
     region: 'oss-cn-shenzhen',
     accessKeyId: 'LTAI4755mDlzKWCK',
@@ -28,7 +25,12 @@ export default (appInfo: EggAppInfo) => {
 
   config.onerror = {
     all(err, ctx) {
-      ctx.body = JSON.stringify(err)
+      ctx.status = err.status || 500
+      ctx.body = JSON.stringify({
+        code: err.status,
+        success: false,
+        message: err.message,
+      })
     },
   }
 
