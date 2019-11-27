@@ -13,6 +13,7 @@ export default class Oss extends Service {
   private createClient(option, config) {
     if (option.provider === Provider.ALIBABA) {
       this.client = new OSS({
+        secure: true,
         bucket: option.bucket,
         region: config[Provider.ALIBABA].region,
         accessKeyId: config[Provider.ALIBABA].accessKeyId,
@@ -58,10 +59,8 @@ export default class Oss extends Service {
 
         result.push({
           success: true,
-          // @ts-ignore
-          url: res.url,
-          // @ts-ignore
           name: res.name.replace(`${parmas.folder}/`, ''),
+          url: res.url,
         })
       }
 
@@ -71,8 +70,8 @@ export default class Oss extends Service {
 
       result = {
         url: res.url,
-        success: true,
         name: res.name.replace(`${parmas.folder}/`, ''),
+        success: true,
       }
     }
 

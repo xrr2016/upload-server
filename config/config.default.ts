@@ -43,8 +43,9 @@ export default (appInfo: EggAppInfo) => {
   config.onerror = {
     all(err, ctx) {
       ctx.status = err.status || 500
+
       ctx.body = JSON.stringify({
-        code: err.status,
+        code: ctx.status,
         success: false,
         message: err.message,
       })
