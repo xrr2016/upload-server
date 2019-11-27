@@ -22,6 +22,16 @@ describe('测试 oss controller', () => {
       .expect(400)
   })
 
+  it('不再白名单的 bucket 名返回错误', async () => {
+    const result = await app.httpRequest()
+      .post('/upload-server/v1/oss')
+      .set('Content-type', 'multipart/form-data; boundary=--------------------------820317025826519383208825')
+      .field('bucket', 'wrong-bucket')
+      .expect(400)
+
+    assert(result.body)
+  })
+
   it('上传文件成功', async () => {
     const result = await app.httpRequest()
       .post('/upload-server/v1/oss')
