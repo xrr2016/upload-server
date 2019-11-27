@@ -33,6 +33,17 @@ export default class OssController extends Controller {
 
     await ctx.validate(rules, body)
 
+    if (body.provider === Provider.ALIBABA) {
+      const bucket = body.bucket
+      const bucketWhitelist = config[Provider.ALIBABA].bucketWhitelist
+
+      if (!bucketWhitelist.includes(bucket)) {
+        throw new ParamsCheckError(`请使用以下的 bucket: ${bucketWhitelist.toString()}`)
+      }
+    } else {
+      throw new ParamsCheckError('不支持的 provider')
+    }
+
     if (!files || files.length < 1) {
       throw new ParamsCheckError('请添加上传文件')
     }

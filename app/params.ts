@@ -1,5 +1,5 @@
 export enum Provider {
-  ALIBABA = 'ALIBABA',
+  ALIBABA = 'alibaba',
 }
 
 export interface UploadParams {
