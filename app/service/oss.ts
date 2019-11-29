@@ -22,10 +22,6 @@ export default class Oss extends Service {
     }
   }
 
-  private deleteFile(filepath: string) {
-    fs.unlink(filepath, () => true)
-  }
-
   private async uploadFile(folder, file) {
     let result
 
@@ -39,7 +35,7 @@ export default class Oss extends Service {
       this.ctx.logger.error(new Error(e.messag))
       throw new Error(e.message)
     } finally {
-      this.deleteFile(file.filepath)
+      fs.unlink(file.filepath, () => true)
     }
 
     return result
@@ -58,7 +54,6 @@ export default class Oss extends Service {
         const res = await this.uploadFile(parmas.folder, file)
 
         result.push({
-          success: true,
           name: res.name.replace(`${parmas.folder}/`, ''),
           url: res.url,
         })
@@ -71,11 +66,9 @@ export default class Oss extends Service {
       result = {
         url: res.url,
         name: res.name.replace(`${parmas.folder}/`, ''),
-        success: true,
       }
     }
 
     return result
-
   }
 }

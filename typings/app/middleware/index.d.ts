@@ -3,9 +3,11 @@
 
 import 'egg';
 import ExportLogger from '../../../app/middleware/logger';
+import ExportPayload from '../../../app/middleware/payload';
 
 declare module 'egg' {
   interface IMiddleware {
     logger: typeof ExportLogger;
+    payload: typeof ExportPayload;
   }
 }

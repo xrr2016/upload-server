@@ -22,6 +22,7 @@
     "clean": "ets clean"
   },
   "dependencies": {
+    "deepexi-body": "0.0.1",
     "dotenv": "^8.2.0",
     "egg": "^2.6.1",
     "egg-alinode": "^2.0.1",

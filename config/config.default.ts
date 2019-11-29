@@ -1,8 +1,9 @@
+import * as os from 'os'
+import * as path from 'path'
 import * as dotenv from 'dotenv'
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg'
+
 import { Provider } from '../app/params'
-import * as path from 'path'
-import * as os from 'os'
 
 dotenv.config()
 
@@ -13,6 +14,7 @@ export default (appInfo: EggAppInfo) => {
 
   config.middleware = [
     'logger',
+    'payload',
   ]
 
   config.security = {
