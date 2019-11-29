@@ -40,6 +40,7 @@ export default (appInfo: EggAppInfo) => {
     cleanSchedule: {
       cron: '0 30 4 * * *',
     },
+    fileExtensions: [ '.pdf', '.doc', '.docx' ],
   }
 
   config[Provider.ALIBABA] = {
