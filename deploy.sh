@@ -5,11 +5,11 @@ set -e
 IMAGE_NAME="upload-server"
 CONTAINER_NAME="upload-server"
 
-#echo '拉取代码'
+echo '拉取代码'
 
 # git checkout dev
 
-# git pull origin dev
+git pull origin dev
 
 echo '运行容器'
 
