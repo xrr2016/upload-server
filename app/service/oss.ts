@@ -1,6 +1,8 @@
-import * as fs from 'fs'
+// import * as fs from 'fs'
 import { Service } from 'egg'
 import * as OSS from 'ali-oss'
+import * as path from 'path'
+import * as sendToWormhole from 'stream-wormhole'
 
 import { Provider, UploadParams } from '../params'
 
@@ -10,7 +12,9 @@ import { Provider, UploadParams } from '../params'
 export default class Oss extends Service {
   private client
 
-  private createClient(option, config) {
+  private createClient(option) {
+    const { config } = this
+
     if (option.provider === Provider.ALIBABA) {
       this.client = new OSS({
         secure: true,
@@ -22,53 +26,25 @@ export default class Oss extends Service {
     }
   }
 
-  private async uploadFile(folder, file) {
+  public async upload(parmas: UploadParams, stream) {
+    this.createClient(parmas)
+
     let result
 
-    const filename = file.filename.replace(/\.(\w+)$/, `-${Date.now()}.$1`)
-
     try {
-      result = await this.client.put(`${folder}/${filename}`, file.filepath, {
+      result = await this.client.put(`${parmas.folder}/${path.basename(stream.filename)}`, stream, {
         headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
-      }).then(result => result)
+      })
     } catch (e) {
       this.ctx.logger.error(new Error(e.messag))
       throw new Error(e.message)
     } finally {
-      fs.unlink(file.filepath, () => true)
+      await sendToWormhole(stream)
     }
 
-    return result
-  }
-
-  public async upload(parmas: UploadParams, files) {
-    const { config } = this
-    this.createClient(parmas, config)
-
-    let result
-
-    if (files.length > 1) {
-      result = []
-
-      for (const file of files) {
-        const res = await this.uploadFile(parmas.folder, file)
-
-        result.push({
-          name: res.name.replace(`${parmas.folder}/`, ''),
-          url: res.url,
-        })
-      }
-
-    } else {
-      const file = files[0]
-      const res = await this.uploadFile(parmas.folder, file)
-
-      result = {
-        url: res.url,
-        name: res.name.replace(`${parmas.folder}/`, ''),
-      }
+    return {
+      name: result.name,
+      url: result.url,
     }
-
-    return result
   }
 }

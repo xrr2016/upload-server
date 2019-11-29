@@ -14,13 +14,13 @@ describe('测试 oss controller', () => {
       .expect(400)
   })
 
-  it('上传文件需要设置 field', async () => {
-    return app.httpRequest()
-      .post('/upload-server/v1/oss')
-      .set('Content-type', 'multipart/form-data; boundary=--------------------------820317025826519383208825')
-      .attach('', 'test/app/controller/avatar.png')
-      .expect(400)
-  })
+  // it('上传文件需要设置 field', async () => {
+  //   return app.httpRequest()
+  //     .post('/upload-server/v1/oss')
+  //     .set('Content-type', 'multipart/form-data; boundary=--------------------------820317025826519383208825')
+  //     .attach('', 'test/app/controller/avatar.png')
+  //     .expect(400)
+  // })
 
   it('不再白名单的 bucket 名返回错误', async () => {
     const result = await app.httpRequest()
