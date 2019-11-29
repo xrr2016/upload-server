@@ -24,7 +24,8 @@ docker build -t upload-server .
 docker stop upload-server
 docker rm upload-server
 
-docker run -d -p 7001:7001 --rm --name=upload-server upload-server
+docker run -d -p 7001:7001 --env-file .env --rm --name=upload-server upload-server
+
 ```
 
 ### Npm Scripts

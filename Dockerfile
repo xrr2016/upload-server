@@ -8,11 +8,13 @@ RUN apk --update add tzdata \
 
 WORKDIR /upload-server
 
-COPY package.json /upload-server/package.json
+COPY package*.json /upload-server
 
-RUN npm install --registry=https://registry.npm.taobao.org && npm run tsc && npm prune --production
+RUN npm install --registry=https://registry.npm.taobao.org
 
 COPY . /upload-server
+
+RUN npm run tsc && npm prune --production
 
 EXPOSE 7001
 

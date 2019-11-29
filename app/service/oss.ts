@@ -1,10 +1,9 @@
-// import * as fs from 'fs'
 import { Service } from 'egg'
 import * as OSS from 'ali-oss'
 import * as path from 'path'
 import * as sendToWormhole from 'stream-wormhole'
 
-import { Provider, UploadParams } from '../params'
+import { Provider } from '../params'
 
 /**
  * Test Service
@@ -26,13 +25,15 @@ export default class Oss extends Service {
     }
   }
 
-  public async upload(parmas: UploadParams, stream) {
+  public async upload(parmas, stream) {
     this.createClient(parmas)
 
     let result
 
+    const filename = path.basename(stream.filename).replace(/\.(\w+)$/, `-${Date.now()}.$1`)
+
     try {
-      result = await this.client.put(`${parmas.folder}/${path.basename(stream.filename)}`, stream, {
+      result = await this.client.put(`${parmas.folder}/${filename}`, stream, {
         headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
       })
     } catch (e) {
@@ -43,7 +44,7 @@ export default class Oss extends Service {
     }
 
     return {
-      name: result.name,
+      name: result.name.replace(`${parmas.folder}/`, ''),
       url: result.url,
     }
   }
