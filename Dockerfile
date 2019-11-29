@@ -8,7 +8,7 @@ RUN apk --update add tzdata \
 
 WORKDIR /upload-server
 
-COPY package*.json /upload-server
+COPY package*.json ./
 
 RUN npm install --registry=https://registry.npm.taobao.org
 
