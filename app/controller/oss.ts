@@ -1,25 +1,42 @@
 import { Controller } from 'egg'
 import { Provider } from '../params'
 
-class ParamsCheckError extends Error {
-
-  message: string
-  status: number
-
-  constructor(msg) {
-    super()
-    this.message = msg
-    this.status = 400
-  }
-}
-
 export default class OssController extends Controller {
+
+  private error(msg) {
+    const { ctx } = this
+
+    ctx.status = 400
+    ctx.body = {
+      code: ctx.status,
+      success: false,
+      message: msg,
+    }
+  }
+
   public async upload() {
     const { ctx, config } = this
-    const body = ctx.request.body
 
-    if (!ctx.get('Content-Type').startsWith('multipart/form-data')) {
-      throw new ParamsCheckError('请求头 Content-Type 应该为 multipart/form-data')
+    const contentType = ctx.get('Content-Type')
+
+    if (!contentType || !contentType.startsWith('multipart/form-data')) {
+      this.error('Content-Type 应该为 multipart/form-data')
+      return
+    }
+
+    const body = ctx.request.body
+    const files = ctx.request.files
+
+    if (!files || files.length < 1) {
+      this.error('请添加上传文件')
+      return
+    }
+
+    for (const file of files) {
+      if (!file.field) {
+        this.error('上传文件需要设置 field')
+        return
+      }
     }
 
     const rules = {
@@ -30,25 +47,19 @@ export default class OssController extends Controller {
 
     await ctx.validate(rules, body)
 
-    if (body.provider === Provider.ALIBABA) {
-      const bucket = body.bucket
-      const bucketWhitelist = config[Provider.ALIBABA].bucketWhitelist
-
-      if (!bucketWhitelist.includes(bucket)) {
-        throw new ParamsCheckError(`请使用以下的 bucket: ${bucketWhitelist.toString()}`)
-      }
-    } else {
-      throw new ParamsCheckError('不支持的 provider')
+    if (body.provider !== Provider.ALIBABA) {
+      this.error('不支持的 provider')
+      return
     }
 
-    let stream
+    const bucket = body.bucket
+    const bucketWhitelist = config[Provider.ALIBABA].bucketWhitelist
 
-    try {
-      stream = await ctx.getFileStream()
-    } catch (e) {
-      throw new ParamsCheckError('请添加上传文件')
+    if (!bucketWhitelist.includes(bucket)) {
+      this.error(`错误的 bucket, 请使用以下的 bucket: ${bucketWhitelist.toString()}`)
+      return
     }
 
-    ctx.body = await ctx.service.oss.upload(body, stream)
+    ctx.body = await ctx.service.oss.upload(body, files)
   }
 }

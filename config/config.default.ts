@@ -34,7 +34,7 @@ export default (appInfo: EggAppInfo) => {
   }
 
   config.multipart = {
-    mode: 'stream',
+    mode: 'file',
     fileSize: '50mb',
     tmpdir: path.join(os.tmpdir(), 'egg-multipart-tmp', appInfo.name),
     cleanSchedule: {

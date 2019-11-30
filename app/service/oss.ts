@@ -1,12 +1,11 @@
+import * as fs from 'fs'
 import { Service } from 'egg'
 import * as OSS from 'ali-oss'
-import * as path from 'path'
-import * as sendToWormhole from 'stream-wormhole'
 
 import { Provider } from '../params'
 
 /**
- * Test Service
+ * Oss Service
  */
 export default class Oss extends Service {
   private client
@@ -25,27 +24,53 @@ export default class Oss extends Service {
     }
   }
 
-  public async upload(parmas, stream) {
-    this.createClient(parmas)
-
+  private async uploadFile(folder, file) {
     let result
 
-    const filename = path.basename(stream.filename).replace(/\.(\w+)$/, `-${Date.now()}.$1`)
+    const filename = file.filename.replace(/\.(\w+)$/, `-${Date.now()}.$1`)
 
     try {
-      result = await this.client.put(`${parmas.folder}/${filename}`, stream, {
+      result = await this.client.put(`${folder}/${filename}`, file.filepath, {
         headers: { 'Cache-Control': 'max-age=3600', 'Content-Disposition': '' },
       })
     } catch (e) {
       this.ctx.logger.error(new Error(e.messag))
       throw new Error(e.message)
     } finally {
-      await sendToWormhole(stream)
+      fs.unlink(file.filepath, () => true)
     }
 
-    return {
-      name: result.name.replace(`${parmas.folder}/`, ''),
-      url: result.url,
-    }
+    return result
   }
+
+  public async upload(parmas, files) {
+    this.createClient(parmas)
+
+    let result
+
+    if (files.length > 1) {
+      result = []
+
+      for (const file of files) {
+        const res = await this.uploadFile(parmas.folder, file)
+
+        result.push({
+          url: res.url,
+          name: res.name.replace(`${parmas.folder}/`, ''),
+        })
+      }
+
+    } else {
+      const file = files[0]
+      const res = await this.uploadFile(parmas.folder, file)
+
+      result = {
+        url: res.url,
+        name: res.name.replace(`${parmas.folder}/`, ''),
+      }
+    }
+
+    return result
+  }
+
 }
